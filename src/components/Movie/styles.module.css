@@ -1,0 +1,40 @@
+.root {
+  background-color: rgb(249 250 251);
+  cursor: pointer;
+}
+
+.root:hover {
+  background-color: rgb(243 244 246);
+}
+
+.root:nth-child(even) {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  background-color: rgb(255 255 255);
+  border-top: 1px solid rgb(229 231 235);
+  border-bottom: 1px solid rgb(229 231 235);
+}
+
+.root:nth-child(even):hover {
+  background-color: rgb(243 244 246);
+}
+
+.main {
+  display: flex;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  align-items: center;
+  font-weight: 700;
+  gap: 1rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.main::after {
+  content: attr(title);
+}
+
+.main::before {
+  content: attr(rank);
+  order: 1;
+  margin-left: auto;
+}
