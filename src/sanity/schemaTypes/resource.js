@@ -1,0 +1,105 @@
+export const resourceSchema = {
+  name: 'resource',
+  title: 'Resource',
+  type: 'document',
+  fields: [
+    {
+      name: 'title',
+      title: 'Title',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'slug',
+      title: 'Slug',
+      type: 'slug',
+      options: { source: 'title', maxLength: 96 },
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Books', value: 'Books' },
+          { title: 'Toys & Games', value: 'Toys & Games' },
+          { title: 'Movies & TV', value: 'Movies & TV' },
+          { title: 'Music', value: 'Music' },
+          { title: 'Food & Entertaining', value: 'Food & Entertaining' },
+          { title: 'Collectibles', value: 'Collectibles' },
+        ],
+        layout: 'radio',
+      },
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'credit',
+      title: 'Author / Maker / Company',
+      description: 'The name shown under the title (e.g. "Jean Shepherd" or "Kenner")',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'creditLabel',
+      title: 'Credit Label',
+      description: 'Label shown before the credit (e.g. "Author", "Manufacturer", "Director")',
+      type: 'string',
+      initialValue: 'Author',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'year',
+      title: 'Year',
+      type: 'number',
+    },
+    {
+      name: 'image',
+      title: 'Cover / Product Image',
+      type: 'image',
+      options: { hotspot: true },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt text',
+          type: 'string',
+        },
+      ],
+    },
+    {
+      name: 'description',
+      title: 'Description',
+      description: 'Short description shown on the card and detail page',
+      type: 'text',
+      rows: 4,
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'review',
+      title: "Gerry's Review",
+      description: "Gerry's personal take — shown in the quote block on the detail page",
+      type: 'text',
+      rows: 6,
+    },
+    {
+      name: 'buyUrl',
+      title: 'Buy / Find Link',
+      type: 'url',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'buyLabel',
+      title: 'Buy Button Label',
+      description: 'e.g. "Buy on Amazon", "Find on eBay", "Shop Now"',
+      type: 'string',
+      initialValue: 'Buy on Amazon',
+    },
+  ],
+  preview: {
+    select: {
+      title: 'title',
+      subtitle: 'credit',
+      media: 'image',
+    },
+  },
+}
