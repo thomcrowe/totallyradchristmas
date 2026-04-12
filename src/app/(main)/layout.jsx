@@ -151,7 +151,7 @@ export default function MainLayout({ children }) {
       </main>
 
       {/* ── Mobile-only footer ── */}
-      <footer className="border-t border-slate-200 bg-slate-50 py-10 lg:hidden">
+      <footer className="border-t border-slate-200 bg-slate-50 py-10 pb-36 lg:hidden">
         <div className="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4">
           <AboutSection />
           <h2 className="mt-8 flex items-center font-mono text-sm font-medium leading-7 text-slate-900">

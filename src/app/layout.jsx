@@ -84,7 +84,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="flex min-h-full">
-        {children}
+        <div className="w-full">{children}</div>
         <Analytics />
         <Script
           src="https://kit.fontawesome.com/8e56931674.js"
