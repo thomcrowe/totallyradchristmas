@@ -52,21 +52,7 @@ export default function MainLayout({ children }) {
   return (
     <AudioProvider>
       <header className="bg-slate-50 lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-112 lg:items-start lg:overflow-y-auto xl:w-120">
-        <div className="hidden lg:sticky lg:top-0 lg:flex lg:w-16 lg:flex-none lg:flex-col lg:items-center lg:gap-6 lg:whitespace-nowrap lg:py-12 lg:text-sm lg:leading-7 lg:[writing-mode:vertical-rl]">
-          <Link href="/" className="font-mono text-slate-900 hover:text-red-600">
-            Home
-          </Link>
-          <Link href="/about" className="font-mono text-slate-900 hover:text-red-600">
-            About
-          </Link>
-          <Link href="/recipes" className="font-mono text-slate-900 hover:text-red-600">
-            Recipes
-          </Link>
-          <Link href="/resources" className="font-mono text-slate-900 hover:text-red-600">
-            Resources
-          </Link>
-        </div>
-        <div className="relative z-10 mx-auto px-4 pb-4 pt-10 sm:px-6 md:max-w-2xl md:px-4 lg:min-h-full lg:flex-auto lg:border-x lg:border-slate-200 lg:px-8 lg:py-12 xl:px-12">
+        <div className="relative z-10 mx-auto w-full px-4 pb-4 pt-10 sm:px-6 md:max-w-2xl md:px-4 lg:min-h-full lg:flex-auto lg:border-r lg:border-slate-200 lg:px-8 lg:py-12 xl:px-12">
           <Link
             href="/"
             className="relative mx-auto block w-48 overflow-hidden rounded-lg bg-slate-200 shadow-xl shadow-slate-200 sm:w-64 sm:rounded-xl lg:w-auto lg:rounded-2xl"
@@ -88,20 +74,22 @@ export default function MainLayout({ children }) {
             <p className="mt-3 text-lg font-medium leading-8 text-slate-700">
               Christmas in the &apos;80s to the max!
             </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-4 lg:hidden">
-              <Link href="/" className="font-mono text-slate-900 hover:text-red-600">
-                Home
-              </Link>
-              <Link href="/about" className="font-mono text-slate-900 hover:text-red-600">
-                About
-              </Link>
-              <Link href="/recipes" className="font-mono text-slate-900 hover:text-red-600">
-                Recipes
-              </Link>
-              <Link href="/resources" className="font-mono text-slate-900 hover:text-red-600">
-                Resources
-              </Link>
-            </div>
+            <nav className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 lg:justify-start">
+              {[
+                ['Home', '/'],
+                ['About', '/about'],
+                ['Recipes', '/recipes'],
+                ['Resources', '/resources'],
+              ].map(([label, href]) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="font-mono text-sm font-medium text-slate-700 hover:text-red-600"
+                >
+                  {label}
+                </Link>
+              ))}
+            </nav>
           </div>
           <AboutSection className="mt-12 hidden lg:block" />
           <section className="mt-10 lg:mt-12">
@@ -165,20 +153,22 @@ export default function MainLayout({ children }) {
           <div className="mt-2 text-sm font-bold leading-7 text-slate-900">
             Gerry D
           </div>
-          <div className="mt-6 flex flex-wrap justify-center gap-4">
-            <Link href="/" className="font-mono text-slate-500 hover:text-slate-900">
-              Home
-            </Link>
-            <Link href="/about" className="font-mono text-slate-500 hover:text-slate-900">
-              About
-            </Link>
-            <Link href="/recipes" className="font-mono text-slate-500 hover:text-slate-900">
-              Recipes
-            </Link>
-            <Link href="/resources" className="font-mono text-slate-500 hover:text-slate-900">
-              Resources
-            </Link>
-          </div>
+          <nav className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2">
+            {[
+              ['Home', '/'],
+              ['About', '/about'],
+              ['Recipes', '/recipes'],
+              ['Resources', '/resources'],
+            ].map(([label, href]) => (
+              <Link
+                key={href}
+                href={href}
+                className="font-mono text-sm text-slate-500 hover:text-slate-900"
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
         </div>
       </footer>
       <div className="fixed inset-x-0 bottom-0 z-10 lg:left-112 xl:left-120">

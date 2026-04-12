@@ -48,5 +48,9 @@ export const recipes = [
       "Double for a crowd. Yes — double for a crowd. Unmold. Serve. Enjoy.",
     ],
     notes: "8 Servings. Double for a crowd.",
+    contributor: {
+      name: 'Thom Crowe',
+      url: 'https://instagram.com/thomcrowe',
+    },
   },
 ]
