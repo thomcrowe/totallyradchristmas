@@ -1,0 +1,52 @@
+export const CATEGORIES = [
+  'All',
+  'Main Dishes',
+  'Sides & Salads',
+  'Desserts',
+  'Drinks & Cocktails',
+  'Appetizers',
+  'Questionable Classics',
+]
+
+export const recipes = [
+  {
+    id: 'jellied-beef-mold',
+    title: 'Jellied Beef Mold',
+    category: 'Questionable Classics',
+    year: '1980s',
+    servings: 8,
+    image: '/recipes/jellied-beef-mold.jpg',
+    tagline: '👀 Jellied. Beef. Mold. 👀',
+    description:
+      "With commentary notes by yours truly. Please — double all ingredients for a crowd. It says so right there at the end of the recipe.",
+    ingredients: [
+      '1½ pounds boneless beef chuck roast, cubed',
+      '1 cup hot water',
+      '1 envelope unflavored gelatin',
+      '⅓ cup celery, chopped',
+      '¼ cup onion, chopped',
+      '¼ cup dill pickle, cubed',
+      '10½ ounces beef consommé',
+      '½ teaspoon salt',
+      '⅛ teaspoon pepper',
+      '12 olives with pimiento strips',
+      '12 roasted red peppers',
+      'Parsley, for garnish',
+      'Stuffed olives, for garnish',
+    ],
+    steps: [
+      "First you'll want to take perfectly good beef and simmer that up in water. Keep going until it's nice and tender. Save the broth — you're gonna need it later!",
+      "After your meat is tender you're going to remove it and then put it through a food chopper. That's right… chop it using a coarse blade until it's meat mush.",
+      "Once you are through pulverizing it, you should end it right here. Be done and walk away. Oh wait my bad, I mean you should end up with 2 cups of above mentioned meat mush.",
+      "Cool the broth you reserved from the boiled meat and then soften gelatin in 2 tbsp. broth.",
+      "Cook celery and onion in broth until tender, but still slightly firm, about 10 minutes. Drain, save broth. Mix celery, onion and pickle with meat. I love pickles, don't you? Doesn't that sound tasty so far???",
+      "Next add enough broth to consommé to make 2 cups; heat. Add softened gelatin, stir to dissolve. Pour a thin layer of gelatin into 1½ quart loaf pan or 6 cup mold; chill.",
+      "To remainder of gelatin mixture, add salt, pepper and beef mixture.",
+      "Arrange olive slices and pimiento strips in design over gelatin in pan. You're going to want to make it look pretty so plan your design out ahead of time if needed. Presentation is everything!",
+      "Carefully spoon in beef mixture, chill.",
+      "To serve, unmold on platter, garnish with parsley and stuffed olives if desired.",
+      "Double for a crowd. Yes — double for a crowd. Unmold. Serve. Enjoy.",
+    ],
+    notes: "8 Servings. Double for a crowd.",
+  },
+]

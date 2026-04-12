@@ -59,6 +59,12 @@ export default function MainLayout({ children }) {
           <Link href="/about" className="font-mono text-slate-900 hover:text-red-600">
             About
           </Link>
+          <Link href="/recipes" className="font-mono text-slate-900 hover:text-red-600">
+            Recipes
+          </Link>
+          <Link href="/resources" className="font-mono text-slate-900 hover:text-red-600">
+            Resources
+          </Link>
         </div>
         <div className="relative z-10 mx-auto px-4 pb-4 pt-10 sm:px-6 md:max-w-2xl md:px-4 lg:min-h-full lg:flex-auto lg:border-x lg:border-slate-200 lg:px-8 lg:py-12 xl:px-12">
           <Link
@@ -82,12 +88,18 @@ export default function MainLayout({ children }) {
             <p className="mt-3 text-lg font-medium leading-8 text-slate-700">
               Christmas in the &apos;80s to the max!
             </p>
-            <div className="mt-6 flex justify-center gap-6 lg:hidden">
+            <div className="mt-6 flex flex-wrap justify-center gap-4 lg:hidden">
               <Link href="/" className="font-mono text-slate-900 hover:text-red-600">
                 Home
               </Link>
               <Link href="/about" className="font-mono text-slate-900 hover:text-red-600">
                 About
+              </Link>
+              <Link href="/recipes" className="font-mono text-slate-900 hover:text-red-600">
+                Recipes
+              </Link>
+              <Link href="/resources" className="font-mono text-slate-900 hover:text-red-600">
+                Resources
               </Link>
             </div>
           </div>
@@ -153,12 +165,18 @@ export default function MainLayout({ children }) {
           <div className="mt-2 text-sm font-bold leading-7 text-slate-900">
             Gerry D
           </div>
-          <div className="mt-6 flex justify-center gap-6">
+          <div className="mt-6 flex flex-wrap justify-center gap-4">
             <Link href="/" className="font-mono text-slate-500 hover:text-slate-900">
               Home
             </Link>
             <Link href="/about" className="font-mono text-slate-500 hover:text-slate-900">
               About
+            </Link>
+            <Link href="/recipes" className="font-mono text-slate-500 hover:text-slate-900">
+              Recipes
+            </Link>
+            <Link href="/resources" className="font-mono text-slate-500 hover:text-slate-900">
+              Resources
             </Link>
           </div>
         </div>
