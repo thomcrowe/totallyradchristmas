@@ -53,6 +53,7 @@ const NAV_LINKS = [
   ['About', '/about'],
   ['Recipes', '/recipes'],
   ['Resources', '/resources'],
+  ['Merch', '/merch'],
 ]
 
 const LISTEN_LINKS = [
