@@ -57,7 +57,7 @@ export default function MerchPage() {
           </p>
 
           {/* CTA banner */}
-          <div className="mt-6 flex items-center gap-4 rounded-2xl bg-red-50 px-6 py-4 ring-1 ring-red-100">
+          <div className="mt-6 flex flex-col gap-3 rounded-2xl bg-red-50 px-6 py-4 ring-1 ring-red-100 sm:flex-row sm:items-center sm:gap-4">
             <ShoppingBagIcon className="h-8 w-8 shrink-0 text-red-600" />
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-slate-900">Shop the full store on TeePublic</p>
@@ -67,7 +67,7 @@ export default function MerchPage() {
               href={STORE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="shrink-0 inline-flex items-center gap-2 rounded-full bg-red-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-red-700 transition-colors"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-red-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-red-700 transition-colors"
             >
               Shop Now
               <ExternalLinkIcon className="h-4 w-4" />
@@ -78,7 +78,7 @@ export default function MerchPage() {
         {/* Product grid */}
         <ul
           role="list"
-          className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"
+          className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 xl:grid-cols-4"
         >
           {products.map((product) => (
             <li key={product.id}>
@@ -96,7 +96,6 @@ export default function MerchPage() {
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                     sizes="(min-width: 1280px) 20vw, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-                    unoptimized
                   />
                   {/* Hover overlay */}
                   <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100 p-4">
@@ -107,11 +106,24 @@ export default function MerchPage() {
                   </div>
                 </div>
 
-                {/* Product title */}
-                <p className="mt-3 text-sm font-semibold text-slate-900 group-hover:text-red-600 transition-colors leading-tight">
-                  {product.title}
-                </p>
-                <p className="mt-0.5 text-xs text-slate-500">T-shirt & more</p>
+                {/* Product info */}
+                <div className="mt-3">
+                  <p className="text-sm font-semibold text-slate-900 group-hover:text-red-600 transition-colors leading-tight">
+                    {product.title}
+                  </p>
+                  <p className="mt-0.5 text-xs text-slate-500">T-shirt &amp; more</p>
+                  <div className="mt-1.5 flex items-baseline gap-2">
+                    <span className="text-sm font-bold text-red-600">${product.price}</span>
+                    {product.originalPrice && (
+                      <span className="text-xs text-slate-400 line-through">${product.originalPrice}</span>
+                    )}
+                    {product.originalPrice && (
+                      <span className="rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-semibold text-green-700">
+                        Sale
+                      </span>
+                    )}
+                  </div>
+                </div>
               </Link>
             </li>
           ))}
