@@ -46,8 +46,23 @@ export default async function RecipePage({ params }) {
           All Recipes
         </Link>
 
-        <div className="mt-8 lg:grid lg:grid-cols-2 lg:gap-16">
-          {/* Left column: image + meta */}
+        {/* Title + category */}
+        <div className="mt-8">
+          <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-red-700">
+            {recipe.category}
+          </span>
+          <h1 className="mt-3 text-3xl font-bold text-slate-900 lg:text-4xl">
+            {recipe.title}
+          </h1>
+          {recipe.tagline && (
+            <p className="mt-2 text-lg font-medium text-red-600">{recipe.tagline}</p>
+          )}
+          <p className="mt-3 text-base leading-7 text-slate-600">{recipe.description}</p>
+        </div>
+
+        {/* Image + Ingredients side by side */}
+        <div className="mt-10 grid gap-10 lg:grid-cols-2">
+          {/* Image + meta */}
           <div>
             {recipe.image && (
               <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-slate-100 shadow-lg">
@@ -61,37 +76,27 @@ export default async function RecipePage({ params }) {
                 />
               </div>
             )}
-
-            {/* Meta box */}
-            <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-5">
               <dl className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <dt className="font-mono font-semibold uppercase tracking-wide text-slate-500">
-                    Category
-                  </dt>
+                  <dt className="font-mono font-semibold uppercase tracking-wide text-slate-500">Category</dt>
                   <dd className="mt-1 font-medium text-slate-900">{recipe.category}</dd>
                 </div>
                 {recipe.servings && (
                   <div>
-                    <dt className="font-mono font-semibold uppercase tracking-wide text-slate-500">
-                      Servings
-                    </dt>
+                    <dt className="font-mono font-semibold uppercase tracking-wide text-slate-500">Servings</dt>
                     <dd className="mt-1 font-medium text-slate-900">{recipe.servings}</dd>
                   </div>
                 )}
                 {recipe.year && (
                   <div>
-                    <dt className="font-mono font-semibold uppercase tracking-wide text-slate-500">
-                      Era
-                    </dt>
+                    <dt className="font-mono font-semibold uppercase tracking-wide text-slate-500">Era</dt>
                     <dd className="mt-1 font-medium text-slate-900">{recipe.year}</dd>
                   </div>
                 )}
                 {recipe.contributor && (
                   <div>
-                    <dt className="font-mono font-semibold uppercase tracking-wide text-slate-500">
-                      Contributor
-                    </dt>
+                    <dt className="font-mono font-semibold uppercase tracking-wide text-slate-500">Contributor</dt>
                     <dd className="mt-1 font-medium text-slate-900">
                       <Link
                         href={recipe.contributor.url}
@@ -108,80 +113,64 @@ export default async function RecipePage({ params }) {
             </div>
           </div>
 
-          {/* Right column: title + ingredients + steps */}
-          <div className="mt-10 lg:mt-0">
-            <div>
-              <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-red-700">
-                {recipe.category}
-              </span>
-            </div>
-            <h1 className="mt-3 text-3xl font-bold text-slate-900 lg:text-4xl">
-              {recipe.title}
-            </h1>
-            {recipe.tagline && (
-              <p className="mt-2 text-lg font-medium text-red-600">{recipe.tagline}</p>
-            )}
-            <p className="mt-4 text-base leading-7 text-slate-600">{recipe.description}</p>
-
-            {/* Ingredients */}
-            <div className="mt-10">
-              <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase tracking-wide text-slate-900">
-                <span className="h-px flex-1 bg-slate-200" />
-                Ingredients
-                <span className="h-px flex-1 bg-slate-200" />
-              </h2>
-              <ul className="mt-4 space-y-2">
-                {recipe.ingredients.map((ing, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-slate-700">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
-                    {ing}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Instructions */}
-            <div className="mt-10">
-              <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase tracking-wide text-slate-900">
-                <span className="h-px flex-1 bg-slate-200" />
-                Instructions
-                <span className="h-px flex-1 bg-slate-200" />
-              </h2>
-              <ol className="mt-4 space-y-5">
-                {recipe.steps.map((step, i) => (
-                  <li key={i} className="flex gap-4">
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-600 text-sm font-bold text-white">
-                      {i + 1}
-                    </span>
-                    <p className="mt-0.5 text-sm leading-7 text-slate-700">{step}</p>
-                  </li>
-                ))}
-              </ol>
-            </div>
-
-            {/* Notes */}
-            {recipe.notes && (
-              <div className="mt-8 rounded-xl bg-red-50 p-4 text-sm text-red-800">
-                📝 <span className="font-medium">{recipe.notes}</span>
-              </div>
-            )}
-
-            {/* Contributor credit */}
-            {recipe.contributor && (
-              <p className="mt-8 text-sm text-slate-500">
-                Recipe shared by{' '}
-                <Link
-                  href={recipe.contributor.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-medium text-red-600 hover:underline"
-                >
-                  {recipe.contributor.name}
-                </Link>
-              </p>
-            )}
+          {/* Ingredients */}
+          <div>
+            <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase tracking-wide text-slate-900">
+              <span className="h-px flex-1 bg-slate-200" />
+              Ingredients
+              <span className="h-px flex-1 bg-slate-200" />
+            </h2>
+            <ul className="mt-4 space-y-2">
+              {recipe.ingredients.map((ing, i) => (
+                <li key={i} className="flex items-start gap-3 text-sm text-slate-700">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
+                  {ing}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
+
+        {/* Instructions — full width */}
+        <div className="mt-12">
+          <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase tracking-wide text-slate-900">
+            <span className="h-px flex-1 bg-slate-200" />
+            Instructions
+            <span className="h-px flex-1 bg-slate-200" />
+          </h2>
+          <ol className="mt-6 space-y-5">
+            {recipe.steps.map((step, i) => (
+              <li key={i} className="flex gap-4">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-600 text-sm font-bold text-white">
+                  {i + 1}
+                </span>
+                <p className="mt-0.5 text-sm leading-7 text-slate-700">{step}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {/* Notes */}
+        {recipe.notes && (
+          <div className="mt-8 rounded-xl bg-red-50 p-4 text-sm text-red-800">
+            📝 <span className="font-medium">{recipe.notes}</span>
+          </div>
+        )}
+
+        {/* Contributor credit */}
+        {recipe.contributor && (
+          <p className="mt-8 text-sm text-slate-500">
+            Recipe shared by{' '}
+            <Link
+              href={recipe.contributor.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-red-600 hover:underline"
+            >
+              {recipe.contributor.name}
+            </Link>
+          </p>
+        )}
       </Container>
     </div>
   )
