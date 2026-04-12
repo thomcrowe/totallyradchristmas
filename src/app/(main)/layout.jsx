@@ -48,90 +48,93 @@ function PersonIcon(props) {
   )
 }
 
+const NAV_LINKS = [
+  ['Home', '/'],
+  ['About', '/about'],
+  ['Recipes', '/recipes'],
+  ['Resources', '/resources'],
+]
+
+const LISTEN_LINKS = [
+  ['Spotify', SpotifyIcon, 'https://open.spotify.com/show/0qICAW7PgbFNsDq00eMzpV'],
+  ['Apple Podcasts', ApplePodcastIcon, 'https://podcasts.apple.com/us/podcast/totally-rad-christmas/id1508004549'],
+  ['RSS Feed', RSSIcon, 'https://rss.buzzsprout.com/840331.rss'],
+]
+
 export default function MainLayout({ children }) {
   return (
     <AudioProvider>
+      {/* ── Sidebar (desktop) / Top banner (mobile) ── */}
       <header className="bg-slate-50 lg:fixed lg:inset-y-0 lg:left-0 lg:flex lg:w-112 lg:items-start lg:overflow-y-auto xl:w-120">
         <div className="relative z-10 mx-auto w-full px-4 pb-4 pt-10 sm:px-6 md:max-w-2xl md:px-4 lg:min-h-full lg:flex-auto lg:border-r lg:border-slate-200 lg:px-8 lg:py-12 xl:px-12">
+
+          {/* Podcast cover art */}
           <Link
             href="/"
-            className="relative mx-auto block w-48 overflow-hidden rounded-lg bg-slate-200 shadow-xl shadow-slate-200 sm:w-64 sm:rounded-xl lg:w-auto lg:rounded-2xl"
+            className="relative mx-auto block w-32 overflow-hidden rounded-lg bg-slate-200 shadow-xl shadow-slate-200 sm:w-48 sm:rounded-xl lg:w-auto lg:rounded-2xl"
             aria-label="Homepage"
           >
             <Image
               className="w-full"
               src={posterImage}
               alt="Totally Rad Christmas! Podcast"
-              sizes="(min-width: 1024px) 20rem, (min-width: 640px) 16rem, 12rem"
+              sizes="(min-width: 1024px) 20rem, (min-width: 640px) 12rem, 8rem"
               priority
             />
             <div className="absolute inset-0 rounded-lg ring-1 ring-inset ring-black/10 sm:rounded-xl lg:rounded-2xl" />
           </Link>
-          <div className="mt-10 text-center lg:mt-12 lg:text-left">
+
+          {/* Title + tagline + nav */}
+          <div className="mt-6 text-center lg:mt-12 lg:text-left">
             <p className="text-xl font-bold text-slate-900">
               <Link href="/">Totally Rad Christmas!</Link>
             </p>
-            <p className="mt-3 text-lg font-medium leading-8 text-slate-700">
+            <p className="mt-1 text-sm font-medium leading-7 text-slate-600 lg:text-base lg:leading-8">
               Christmas in the &apos;80s to the max!
             </p>
-            <nav className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 lg:justify-start">
-              {[
-                ['Home', '/'],
-                ['About', '/about'],
-                ['Recipes', '/recipes'],
-                ['Resources', '/resources'],
-              ].map(([label, href]) => (
+
+            {/* Nav — always visible */}
+            <nav className="mt-4 flex flex-wrap justify-center gap-x-5 gap-y-1 lg:mt-6 lg:justify-start lg:flex-col lg:gap-y-1">
+              {NAV_LINKS.map(([label, href]) => (
                 <Link
                   key={href}
                   href={href}
-                  className="font-mono text-sm font-medium text-slate-700 hover:text-red-600"
+                  className="font-mono text-sm font-medium text-slate-700 hover:text-red-600 lg:py-0.5"
                 >
                   {label}
                 </Link>
               ))}
             </nav>
           </div>
+
+          {/* About blurb — desktop only */}
           <AboutSection className="mt-12 hidden lg:block" />
-          <section className="mt-10 lg:mt-12">
-            <h2 className="sr-only flex items-center font-mono text-sm font-medium leading-7 text-slate-900 lg:not-sr-only">
+
+          {/* Listen links */}
+          <section className="mt-6 lg:mt-12">
+            <h2 className="flex items-center justify-center font-mono text-sm font-medium leading-7 text-slate-900 lg:justify-start">
               <TinyWaveFormIcon
                 colors={['fill-red-600', 'fill-red-400']}
                 className="h-2.5 w-2.5"
               />
-              <span className="ml-2.5">Listen</span>
+              <span className="ml-2.5">Listen on</span>
             </h2>
-            <div className="h-px bg-gradient-to-r from-slate-200/0 via-slate-200 to-slate-200/0 lg:hidden" />
+            <div className="h-px mt-2 bg-gradient-to-r from-slate-200/0 via-slate-200 to-slate-200/0 lg:hidden" />
             <ul
               role="list"
-              className="mt-4 flex justify-center gap-10 text-base font-medium leading-7 text-slate-700 sm:gap-8 lg:flex-col lg:gap-4"
+              className="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm font-medium leading-7 text-slate-700 lg:flex-col lg:gap-y-3"
             >
-              {[
-                [
-                  'Spotify',
-                  SpotifyIcon,
-                  'https://open.spotify.com/show/0qICAW7PgbFNsDq00eMzpV',
-                ],
-                [
-                  'Apple Podcasts',
-                  ApplePodcastIcon,
-                  'https://podcasts.apple.com/us/podcast/totally-rad-christmas/id1508004549',
-                ],
-                [
-                  'RSS Feed',
-                  RSSIcon,
-                  'https://rss.buzzsprout.com/840331.rss',
-                ],
-              ].map(([label, Icon, href]) => (
+              {LISTEN_LINKS.map(([label, Icon, href]) => (
                 <li key={label} className="flex">
                   <Link
                     href={href}
-                    className="group flex items-center"
+                    className="group flex items-center gap-2"
                     aria-label={label}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Icon className="h-8 w-8 fill-slate-400 group-hover:fill-red-600" />
-                    <span className="hidden sm:ml-3 sm:block">{label}</span>
+                    <Icon className="h-6 w-6 flex-none fill-slate-400 group-hover:fill-red-600 lg:h-8 lg:w-8" />
+                    <span className="text-slate-700 group-hover:text-red-600">{label}</span>
                   </Link>
                 </li>
               ))}
@@ -139,27 +142,25 @@ export default function MainLayout({ children }) {
           </section>
         </div>
       </header>
-      <main className="border-t border-slate-200 lg:relative lg:mb-28 lg:ml-112 lg:border-t-0 xl:ml-120">
+
+      {/* ── Main content ── */}
+      {/* pb-28 ensures content is never hidden behind the fixed audio player on mobile */}
+      <main className="border-t border-slate-200 pb-28 lg:relative lg:mb-28 lg:ml-112 lg:border-t-0 lg:pb-0 xl:ml-120">
         <Waveform className="absolute left-0 top-0 h-20 w-full" />
         <div className="relative">{children}</div>
       </main>
-      <footer className="border-t border-slate-200 bg-slate-50 py-10 pb-40 sm:py-16 sm:pb-32 lg:hidden">
+
+      {/* ── Mobile-only footer ── */}
+      <footer className="border-t border-slate-200 bg-slate-50 py-10 lg:hidden">
         <div className="mx-auto px-4 sm:px-6 md:max-w-2xl md:px-4">
           <AboutSection />
           <h2 className="mt-8 flex items-center font-mono text-sm font-medium leading-7 text-slate-900">
             <PersonIcon className="h-3 w-auto fill-slate-300" />
             <span className="ml-2.5">Hosted by</span>
           </h2>
-          <div className="mt-2 text-sm font-bold leading-7 text-slate-900">
-            Gerry D
-          </div>
+          <p className="mt-1 text-sm font-bold text-slate-900">Gerry D</p>
           <nav className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2">
-            {[
-              ['Home', '/'],
-              ['About', '/about'],
-              ['Recipes', '/recipes'],
-              ['Resources', '/resources'],
-            ].map(([label, href]) => (
+            {NAV_LINKS.map(([label, href]) => (
               <Link
                 key={href}
                 href={href}
@@ -171,6 +172,8 @@ export default function MainLayout({ children }) {
           </nav>
         </div>
       </footer>
+
+      {/* ── Fixed audio player ── */}
       <div className="fixed inset-x-0 bottom-0 z-10 lg:left-112 xl:left-120">
         <AudioPlayer />
       </div>
