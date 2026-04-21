@@ -51,6 +51,7 @@ function PersonIcon(props) {
 const NAV_LINKS = [
   ['Home', '/'],
   ['About', '/about'],
+  ['The Raddies', '/raddies'],
   ['Recipes', '/recipes'],
   ['Resources', '/resources'],
   ['Merch', '/merch'],

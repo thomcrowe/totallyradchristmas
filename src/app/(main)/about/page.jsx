@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Container } from '@/components/Container'
+import gerryImage from '@/images/gerry.png'
 
 export const metadata = {
   title: 'About',
@@ -53,8 +54,13 @@ export default function About() {
 
         <div className="mt-8 flex flex-col sm:flex-row gap-8 not-prose">
           <div className="shrink-0">
-            <div className="w-32 h-32 rounded-full bg-red-100 flex items-center justify-center text-5xl">
-              🎄
+            <div className="w-32 h-32 rounded-full overflow-hidden shadow-lg ring-2 ring-red-200">
+              <Image
+                src={gerryImage}
+                alt="Gerry D"
+                className="w-full h-full object-cover"
+                sizes="128px"
+              />
             </div>
           </div>
           <div>
