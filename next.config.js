@@ -10,6 +10,8 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'cdn.raster.app',
       },
+      // Buzzsprout images now route through /api/episode-image proxy,
+      // but keep this in case any direct references remain
       {
         protocol: 'https',
         hostname: 'storage.buzzsprout.com',

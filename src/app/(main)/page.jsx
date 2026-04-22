@@ -7,12 +7,21 @@ import { FormattedDate } from '@/components/FormattedDate'
 import { getAllEpisodes } from '@/lib/episodes'
 
 const SITE_URL = 'https://totallyradchristmas.com'
+const PAGE_SIZE = 20
 
 // Strip anchor tags from RSS description HTML so Lighthouse doesn't flag
 // generic link text ("here", "click here", etc.) from Buzzsprout show notes.
-// Keeps the visible text — removes the link wrapper only.
 function stripLinks(html) {
   return html?.replace(/<a\b[^>]*>(.*?)<\/a>/gi, '$1') ?? ''
+}
+
+// Route Buzzsprout images through our proxy so Next.js can resize/optimize them.
+function proxyImage(url) {
+  if (!url) return null
+  if (url.includes('storage.buzzsprout.com')) {
+    return `/api/episode-image?url=${encodeURIComponent(url)}`
+  }
+  return url
 }
 
 const jsonLd = {
@@ -51,8 +60,9 @@ function PlayIcon(props) {
   )
 }
 
-function EpisodeEntry({ episode }) {
+function EpisodeEntry({ episode, priority }) {
   let date = new Date(episode.published)
+  const proxied = proxyImage(episode.image)
 
   return (
     <article
@@ -61,15 +71,17 @@ function EpisodeEntry({ episode }) {
     >
       <Container>
         <div className="flex items-start gap-6">
-          {episode.image && (
+          {proxied && (
             <Link href={`/${episode.id}`} className="shrink-0" tabIndex={-1}>
               <Image
-                src={episode.image}
+                src={proxied}
                 alt={episode.title}
                 width={112}
                 height={112}
                 className="w-20 h-20 sm:w-28 sm:h-28 rounded-lg object-cover shadow-md"
-                unoptimized
+                sizes="(min-width: 640px) 112px, 80px"
+                priority={priority}
+                loading={priority ? undefined : 'lazy'}
               />
             </Link>
           )}
@@ -123,8 +135,58 @@ function EpisodeEntry({ episode }) {
   )
 }
 
-export default async function Home() {
-  let episodes = await getAllEpisodes()
+function Pagination({ page, totalPages }) {
+  return (
+    <Container>
+      <nav
+        aria-label="Episode pagination"
+        className="flex items-center justify-between border-t border-slate-100 py-8"
+      >
+        <div>
+          {page > 1 ? (
+            <Link
+              href={page === 2 ? '/' : `/?page=${page - 1}`}
+              className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-red-50 hover:text-red-700 transition-colors"
+            >
+              ← Newer episodes
+            </Link>
+          ) : (
+            <span />
+          )}
+        </div>
+
+        <p className="text-sm text-slate-500">
+          Page {page} of {totalPages}
+        </p>
+
+        <div>
+          {page < totalPages ? (
+            <Link
+              href={`/?page=${page + 1}`}
+              className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 hover:bg-red-50 hover:text-red-700 transition-colors"
+            >
+              Older episodes →
+            </Link>
+          ) : (
+            <span />
+          )}
+        </div>
+      </nav>
+    </Container>
+  )
+}
+
+export default async function Home({ searchParams }) {
+  const params = await searchParams
+  const page = Math.max(1, Number(params?.page) || 1)
+
+  let allEpisodes = await getAllEpisodes()
+  const totalPages = Math.ceil(allEpisodes.length / PAGE_SIZE)
+  const clampedPage = Math.min(page, totalPages)
+  const episodes = allEpisodes.slice(
+    (clampedPage - 1) * PAGE_SIZE,
+    clampedPage * PAGE_SIZE,
+  )
 
   return (
     <>
@@ -137,10 +199,17 @@ export default async function Home() {
           <h1 className="text-2xl/7 font-bold text-slate-900">Episodes</h1>
         </Container>
         <div className="divide-y divide-slate-100 sm:mt-4 lg:mt-8 lg:border-t lg:border-slate-100">
-          {episodes.map((episode) => (
-            <EpisodeEntry key={episode.id} episode={episode} />
+          {episodes.map((episode, i) => (
+            <EpisodeEntry
+              key={episode.id}
+              episode={episode}
+              priority={i < 3}
+            />
           ))}
         </div>
+        {totalPages > 1 && (
+          <Pagination page={clampedPage} totalPages={totalPages} />
+        )}
       </div>
     </>
   )
