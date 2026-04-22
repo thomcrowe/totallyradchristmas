@@ -2,6 +2,8 @@ import { Container } from '@/components/Container'
 import { RaddiesList } from '@/components/RaddiesList'
 import { raddiesData as staticRaddiesData } from '@/lib/raddies'
 
+const SITE_URL = 'https://totallyradchristmas.com'
+
 export const metadata = {
   title: 'The Raddies',
   description:
@@ -10,8 +12,26 @@ export const metadata = {
     title: 'The Raddies - Totally Rad Christmas!',
     description:
       "The Raddies — Gerry D's annual awards celebrating the raddest guests, episodes, and moments from Totally Rad Christmas!",
-    images: [{ url: '/og-image.jpg', width: 1200, height: 630 }],
+    images: [{ url: '/og-image.jpg', width: 1400, height: 1400 }],
   },
+}
+
+function buildJsonLd(data) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'The Raddies — Totally Rad Christmas! Annual Awards',
+    description:
+      "Annual awards celebrating the raddest guests, episodes, and moments from Totally Rad Christmas!",
+    url: `${SITE_URL}/raddies`,
+    numberOfItems: data.length,
+    itemListElement: data.map((ceremony, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: `The ${ceremony.ordinal ?? ceremony.year} Raddies (${ceremony.year})`,
+      url: `${SITE_URL}/raddies`,
+    })),
+  }
 }
 
 export const revalidate = 60
@@ -31,9 +51,14 @@ async function getRaddiesData() {
 
 export default async function RaddiesPage() {
   const data = await getRaddiesData()
+  const jsonLd = buildJsonLd(data)
 
   return (
     <div className="pt-16 pb-12 sm:pb-4 lg:pt-12">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Container>
         <div className="mb-10">
           <div className="flex items-center gap-3">

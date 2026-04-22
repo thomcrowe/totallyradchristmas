@@ -11,8 +11,43 @@ export const metadata = {
     title: 'About - Totally Rad Christmas!',
     description:
       "Learn about Totally Rad Christmas! and host Gerry D — the podcast dedicated to Christmas in the '80s to the max.",
-    images: [{ url: '/og-image.jpg', width: 1200, height: 630 }],
+    images: [{ url: '/og-image.jpg', width: 1400, height: 1400 }],
   },
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': 'https://totallyradchristmas.com/#gerry-d',
+      name: 'Gerry D',
+      url: 'https://totallyradchristmas.com/about',
+      image: 'https://totallyradchristmas.com/og-image.jpg',
+      description:
+        "Creator and host of Totally Rad Christmas!, a podcast dedicated to Christmas in the '80s to the max.",
+      sameAs: [
+        'https://twitter.com/radchristmas',
+        'https://www.instagram.com/totallyradchristmas',
+        'https://www.facebook.com/totallyradchristmas',
+      ],
+    },
+    {
+      '@type': 'PodcastSeries',
+      '@id': 'https://totallyradchristmas.com/#podcast',
+      name: 'Totally Rad Christmas!',
+      url: 'https://totallyradchristmas.com',
+      description:
+        "A podcast about Christmas in the '80s to the max! Covering toys, movies, specials, music, books, games, comics, decorations, food, fashion, and fads from that era.",
+      image: 'https://totallyradchristmas.com/og-image.jpg',
+      webFeed: 'https://rss.buzzsprout.com/840331.rss',
+      author: { '@id': 'https://totallyradchristmas.com/#gerry-d' },
+      sameAs: [
+        'https://open.spotify.com/show/0qICAW7PgbFNsDq00eMzpV',
+        'https://podcasts.apple.com/us/podcast/totally-rad-christmas/id1508004549',
+      ],
+    },
+  ],
 }
 
 function SocialLink({ href, icon, label }) {
@@ -33,6 +68,10 @@ function SocialLink({ href, icon, label }) {
 export default function About() {
   return (
     <Container className="py-16 lg:py-36">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="prose prose-slate max-w-none">
         <h1 className="text-4xl font-bold text-slate-900">About the Show</h1>
 
