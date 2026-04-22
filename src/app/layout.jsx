@@ -108,13 +108,13 @@ export default function RootLayout({ children }) {
       <body className="flex min-h-full">
         <div className="w-full">{children}</div>
         <Analytics />
+        <GoogleAnalytics gaId="G-CZDY5REB5V" />
         <Script
           src="https://kit.fontawesome.com/8e56931674.js"
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
       </body>
-      <GoogleAnalytics gaId="G-CZDY5REB5V" />
     </html>
   )
 }
