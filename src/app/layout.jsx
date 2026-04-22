@@ -89,10 +89,20 @@ export default function RootLayout({ children }) {
           href="https://fonts.bunny.net"
           crossOrigin="anonymous"
         />
+        {/* Load font non-blocking: print trick swaps to all after load */}
         <link
           rel="stylesheet"
           href="https://fonts.bunny.net/css?family=satoshi:300,400,500,700&display=swap"
+          media="print"
+          // @ts-expect-error onLoad is valid here for the font-loading trick
+          onLoad="this.media='all'"
         />
+        <noscript>
+          <link
+            rel="stylesheet"
+            href="https://fonts.bunny.net/css?family=satoshi:300,400,500,700&display=swap"
+          />
+        </noscript>
       </head>
       <body className="flex min-h-full">
         <div className="w-full">{children}</div>

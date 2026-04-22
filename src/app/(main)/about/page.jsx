@@ -24,7 +24,8 @@ function SocialLink({ href, icon, label }) {
       className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 text-slate-600 hover:bg-red-100 hover:text-red-700 transition-colors"
       aria-label={label}
     >
-      <i className={`${icon} text-lg`} />
+      <i className={`${icon} text-lg`} aria-hidden="true" />
+      <span className="sr-only">{label}</span>
     </Link>
   )
 }

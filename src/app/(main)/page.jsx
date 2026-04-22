@@ -55,10 +55,10 @@ function EpisodeEntry({ episode }) {
       <Container>
         <div className="flex items-start gap-6">
           {episode.image && (
-            <Link href={`/${episode.id}`} className="shrink-0" tabIndex={-1} aria-hidden="true">
+            <Link href={`/${episode.id}`} className="shrink-0" tabIndex={-1}>
               <Image
                 src={episode.image}
-                alt=""
+                alt={episode.title}
                 width={112}
                 height={112}
                 className="w-20 h-20 sm:w-28 sm:h-28 rounded-lg object-cover shadow-md"
