@@ -2,15 +2,39 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Container } from '@/components/Container'
-import { recipes } from '@/lib/recipes'
+import { recipes as staticRecipes } from '@/lib/recipes'
+
+export const revalidate = 60
+
+async function getRecipeData(slug) {
+  if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+    return staticRecipes.find((r) => r.id === slug) ?? null
+  }
+  try {
+    const { getRecipe } = await import('@/sanity/lib/queries')
+    const recipe = await getRecipe(slug)
+    return recipe ?? staticRecipes.find((r) => r.id === slug) ?? null
+  } catch {
+    return staticRecipes.find((r) => r.id === slug) ?? null
+  }
+}
 
 export async function generateStaticParams() {
-  return recipes.map((r) => ({ slug: r.id }))
+  if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+    return staticRecipes.map((r) => ({ slug: r.id }))
+  }
+  try {
+    const { getAllRecipeSlugs } = await import('@/sanity/lib/queries')
+    const slugs = await getAllRecipeSlugs()
+    return slugs.map(({ slug }) => ({ slug }))
+  } catch {
+    return staticRecipes.map((r) => ({ slug: r.id }))
+  }
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params
-  const recipe = recipes.find((r) => r.id === slug)
+  const recipe = await getRecipeData(slug)
   if (!recipe) return {}
   return {
     title: recipe.title,
@@ -25,55 +49,36 @@ export async function generateMetadata({ params }) {
 
 export default async function RecipePage({ params }) {
   const { slug } = await params
-  const recipe = recipes.find((r) => r.id === slug)
+  const recipe = await getRecipeData(slug)
   if (!recipe) notFound()
 
   return (
     <div className="pt-16 pb-24 lg:pt-12">
       <Container>
-        {/* Back link */}
         <Link
           href="/recipes"
           className="inline-flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-red-600"
         >
           <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-            <path
-              fillRule="evenodd"
-              d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z"
-              clipRule="evenodd"
-            />
+            <path fillRule="evenodd" d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clipRule="evenodd" />
           </svg>
           All Recipes
         </Link>
 
-        {/* Title + category */}
         <div className="mt-8">
           <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-red-700">
             {recipe.category}
           </span>
-          <h1 className="mt-3 text-3xl font-bold text-slate-900 lg:text-4xl">
-            {recipe.title}
-          </h1>
-          {recipe.tagline && (
-            <p className="mt-2 text-lg font-medium text-red-600">{recipe.tagline}</p>
-          )}
+          <h1 className="mt-3 text-3xl font-bold text-slate-900 lg:text-4xl">{recipe.title}</h1>
+          {recipe.tagline && <p className="mt-2 text-lg font-medium text-red-600">{recipe.tagline}</p>}
           <p className="mt-3 text-base leading-7 text-slate-600">{recipe.description}</p>
         </div>
 
-        {/* Image + Ingredients side by side */}
         <div className="mt-10 grid gap-10 lg:grid-cols-2">
-          {/* Image + meta */}
           <div>
             {recipe.image && (
               <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-slate-100 shadow-lg">
-                <Image
-                  src={recipe.image}
-                  alt={recipe.title}
-                  fill
-                  className="object-cover"
-                  sizes="(min-width: 1024px) 40vw, 100vw"
-                  priority
-                />
+                <Image src={recipe.image} alt={recipe.title} fill className="object-cover" sizes="(min-width: 1024px) 40vw, 100vw" priority />
               </div>
             )}
             <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-5">
@@ -98,14 +103,11 @@ export default async function RecipePage({ params }) {
                   <div>
                     <dt className="font-mono font-semibold uppercase tracking-wide text-slate-500">Contributor</dt>
                     <dd className="mt-1 font-medium text-slate-900">
-                      <Link
-                        href={recipe.contributor.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-red-600 hover:underline"
-                      >
-                        {recipe.contributor.name}
-                      </Link>
+                      {recipe.contributor.url ? (
+                        <Link href={recipe.contributor.url} target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline">
+                          {recipe.contributor.name}
+                        </Link>
+                      ) : recipe.contributor.name}
                     </dd>
                   </div>
                 )}
@@ -113,62 +115,48 @@ export default async function RecipePage({ params }) {
             </div>
           </div>
 
-          {/* Ingredients */}
           <div>
             <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase tracking-wide text-slate-900">
-              <span className="h-px flex-1 bg-slate-200" />
-              Ingredients
-              <span className="h-px flex-1 bg-slate-200" />
+              <span className="h-px flex-1 bg-slate-200" />Ingredients<span className="h-px flex-1 bg-slate-200" />
             </h2>
             <ul className="mt-4 space-y-2">
-              {recipe.ingredients.map((ing, i) => (
+              {recipe.ingredients?.map((ing, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm text-slate-700">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
-                  {ing}
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />{ing}
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        {/* Instructions — full width */}
         <div className="mt-12">
           <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase tracking-wide text-slate-900">
-            <span className="h-px flex-1 bg-slate-200" />
-            Instructions
-            <span className="h-px flex-1 bg-slate-200" />
+            <span className="h-px flex-1 bg-slate-200" />Instructions<span className="h-px flex-1 bg-slate-200" />
           </h2>
           <ol className="mt-6 space-y-5">
-            {recipe.steps.map((step, i) => (
+            {recipe.steps?.map((step, i) => (
               <li key={i} className="flex gap-4">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-600 text-sm font-bold text-white">
-                  {i + 1}
-                </span>
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-red-600 text-sm font-bold text-white">{i + 1}</span>
                 <p className="mt-0.5 text-sm leading-7 text-slate-700">{step}</p>
               </li>
             ))}
           </ol>
         </div>
 
-        {/* Notes */}
         {recipe.notes && (
           <div className="mt-8 rounded-xl bg-red-50 p-4 text-sm text-red-800">
             📝 <span className="font-medium">{recipe.notes}</span>
           </div>
         )}
 
-        {/* Contributor credit */}
         {recipe.contributor && (
           <p className="mt-8 text-sm text-slate-500">
             Recipe shared by{' '}
-            <Link
-              href={recipe.contributor.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-red-600 hover:underline"
-            >
-              {recipe.contributor.name}
-            </Link>
+            {recipe.contributor.url ? (
+              <Link href={recipe.contributor.url} target="_blank" rel="noopener noreferrer" className="font-medium text-red-600 hover:underline">
+                {recipe.contributor.name}
+              </Link>
+            ) : <span className="font-medium text-slate-700">{recipe.contributor.name}</span>}
           </p>
         )}
       </Container>

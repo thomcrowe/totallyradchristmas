@@ -1,6 +1,6 @@
 import { Container } from '@/components/Container'
 import { RecipeList } from '@/components/RecipeList'
-import { recipes } from '@/lib/recipes'
+import { recipes as staticRecipes } from '@/lib/recipes'
 
 export const metadata = {
   title: 'Recipes',
@@ -14,7 +14,24 @@ export const metadata = {
   },
 }
 
-export default function RecipesPage() {
+export const revalidate = 60
+
+async function getRecipes() {
+  if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+    return staticRecipes
+  }
+  try {
+    const { getAllRecipes } = await import('@/sanity/lib/queries')
+    const data = await getAllRecipes()
+    return data?.length ? data : staticRecipes
+  } catch {
+    return staticRecipes
+  }
+}
+
+export default async function RecipesPage() {
+  const recipes = await getRecipes()
+
   return (
     <div className="pt-16 pb-12 sm:pb-4 lg:pt-12">
       <Container>

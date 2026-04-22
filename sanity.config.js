@@ -19,7 +19,21 @@ export default defineConfig({
           .title('Content')
           .items([
             S.listItem()
-              .title('Resources')
+              .title('🏆 Raddies Ceremonies')
+              .child(
+                S.documentTypeList('raddiesCeremony')
+                  .title('Raddies Ceremonies')
+                  .defaultOrdering([{ field: 'year', direction: 'desc' }])
+              ),
+            S.divider(),
+            S.listItem()
+              .title('🍽️ Recipes')
+              .child(
+                S.documentTypeList('recipe')
+                  .title('All Recipes')
+              ),
+            S.listItem()
+              .title('🎁 Resources')
               .child(
                 S.documentTypeList('resource')
                   .title('All Resources')

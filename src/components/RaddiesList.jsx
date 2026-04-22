@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { raddiesData } from '@/lib/raddies'
 
 function TrophyIcon({ className }) {
   return (
@@ -19,16 +18,16 @@ function StarIcon({ className }) {
   )
 }
 
-export function RaddiesList() {
-  const [activeYear, setActiveYear] = useState(raddiesData[0].year)
+export function RaddiesList({ data }) {
+  const [activeYear, setActiveYear] = useState(data[0]?.year)
 
-  const activeData = raddiesData.find((d) => d.year === activeYear)
+  const activeData = data.find((d) => d.year === activeYear)
 
   return (
     <div>
       {/* Year tab bar */}
       <div className="flex flex-wrap gap-2 mb-8">
-        {raddiesData.map((item) => {
+        {data.map((item) => {
           const isActive = item.year === activeYear
           return (
             <button

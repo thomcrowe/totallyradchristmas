@@ -1,5 +1,6 @@
 import { Container } from '@/components/Container'
 import { RaddiesList } from '@/components/RaddiesList'
+import { raddiesData as staticRaddiesData } from '@/lib/raddies'
 
 export const metadata = {
   title: 'The Raddies',
@@ -13,7 +14,24 @@ export const metadata = {
   },
 }
 
-export default function RaddiesPage() {
+export const revalidate = 60
+
+async function getRaddiesData() {
+  if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
+    return staticRaddiesData
+  }
+  try {
+    const { getAllRaddiesCeremonies } = await import('@/sanity/lib/queries')
+    const data = await getAllRaddiesCeremonies()
+    return data?.length ? data : staticRaddiesData
+  } catch {
+    return staticRaddiesData
+  }
+}
+
+export default async function RaddiesPage() {
+  const data = await getRaddiesData()
+
   return (
     <div className="pt-16 pb-12 sm:pb-4 lg:pt-12">
       <Container>
@@ -33,7 +51,7 @@ export default function RaddiesPage() {
             year below to see the winners.
           </p>
         </div>
-        <RaddiesList />
+        <RaddiesList data={data} />
       </Container>
     </div>
   )
