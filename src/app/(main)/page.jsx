@@ -15,11 +15,15 @@ function stripLinks(html) {
   return html?.replace(/<a\b[^>]*>(.*?)<\/a>/gi, '$1') ?? ''
 }
 
-// Route Buzzsprout images through our proxy so Next.js can resize/optimize them.
-function proxyImage(url) {
+// Route Buzzsprout images through our sharp-powered proxy.
+// We pass w=224 (2× the 112px display size for retina) so the proxy resizes
+// the 1400×1400 source down to a ~5 KB WebP instead of ~170 KB JPEG.
+// Image components use unoptimized={true} so the browser hits the proxy
+// directly — no double-proxying through /_next/image.
+function proxyImage(url, w = 224) {
   if (!url) return null
   if (url.includes('storage.buzzsprout.com')) {
-    return `/api/episode-image?url=${encodeURIComponent(url)}`
+    return `/api/episode-image?url=${encodeURIComponent(url)}&w=${w}`
   }
   return url
 }
@@ -62,7 +66,7 @@ function PlayIcon(props) {
 
 function EpisodeEntry({ episode, priority }) {
   let date = new Date(episode.published)
-  const proxied = proxyImage(episode.image)
+  const proxied = proxyImage(episode.image, 224)
 
   return (
     <article
@@ -79,7 +83,7 @@ function EpisodeEntry({ episode, priority }) {
                 width={112}
                 height={112}
                 className="w-20 h-20 sm:w-28 sm:h-28 rounded-lg object-cover shadow-md"
-                sizes="(min-width: 640px) 112px, 80px"
+                unoptimized
                 priority={priority}
                 loading={priority ? undefined : 'lazy'}
               />

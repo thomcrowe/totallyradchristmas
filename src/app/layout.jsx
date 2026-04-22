@@ -1,4 +1,3 @@
-import { headers } from 'next/headers'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/react'
 import { GoogleAnalytics } from '@next/third-parties/google'
@@ -83,9 +82,7 @@ export const metadata = {
   },
 }
 
-export default async function RootLayout({ children }) {
-  const nonce = (await headers()).get('x-nonce') ?? ''
-
+export default function RootLayout({ children }) {
   return (
     <html lang="en" className="h-full bg-white antialiased">
       <head>
@@ -112,12 +109,11 @@ export default async function RootLayout({ children }) {
         <div className="w-full">{children}</div>
         <FontLoader />
         <Analytics />
-        <GoogleAnalytics gaId="G-CZDY5REB5V" nonce={nonce} />
+        <GoogleAnalytics gaId="G-CZDY5REB5V" />
         <Script
           src="https://kit.fontawesome.com/8e56931674.js"
           crossOrigin="anonymous"
           strategy="afterInteractive"
-          nonce={nonce}
         />
       </body>
     </html>

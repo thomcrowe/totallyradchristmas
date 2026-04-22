@@ -1,14 +1,24 @@
 import { NextResponse } from 'next/server'
+import sharp from 'sharp'
 
-// Proxy Buzzsprout episode artwork so Next.js Image can optimize it.
-// Buzzsprout requires the exact URL including "?.jpg" suffix — stripping
-// the query string causes a 403, so we can't use the built-in optimizer
-// directly. This route fetches the image and re-serves it from our domain
-// with long-lived cache headers, enabling full Next.js optimization.
+// Proxy + resize Buzzsprout episode artwork.
+//
+// Why a proxy? Buzzsprout requires the "?.jpg" suffix in the URL or returns
+// a 403. Next.js Image optimizer strips query strings, causing every image
+// to 404. Using unoptimized + this proxy gives us full control:
+//   1. Fetch the full 1400×1400 JPEG from Buzzsprout (with correct URL)
+//   2. Resize to the requested width with sharp
+//   3. Return as WebP with long-lived cache headers
+//
+// The Image components use unoptimized={true} so the browser fetches this
+// route directly — no double-proxy through /_next/image.
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url)
   const imageUrl = searchParams.get('url')
+  const rawW = parseInt(searchParams.get('w') || '224', 10)
+  // Cap at 640px — no need to serve larger than 2× the biggest display size
+  const width = Math.min(Math.max(rawW, 40), 640)
 
   if (!imageUrl) {
     return new NextResponse('Missing url parameter', { status: 400 })
@@ -22,25 +32,33 @@ export async function GET(request) {
   try {
     const upstream = await fetch(imageUrl, {
       headers: { 'User-Agent': 'TotallyRadChristmas/1.0' },
-      next: { revalidate: 86400 }, // cache upstream fetch for 24 h
+      // Cache the upstream fetch at the Next.js data cache layer for 24 h
+      next: { revalidate: 86400 },
     })
 
     if (!upstream.ok) {
       return new NextResponse('Image fetch failed', { status: upstream.status })
     }
 
-    const contentType = upstream.headers.get('content-type') ?? 'image/jpeg'
-    const body = await upstream.arrayBuffer()
+    const buffer = Buffer.from(await upstream.arrayBuffer())
 
-    return new NextResponse(body, {
+    // Resize and convert to WebP — dramatically smaller than the source JPEG
+    const resized = await sharp(buffer)
+      .resize(width, width, { fit: 'cover', position: 'centre' })
+      .webp({ quality: 82 })
+      .toBuffer()
+
+    return new NextResponse(resized, {
       status: 200,
       headers: {
-        'Content-Type': contentType,
-        // Cache at the edge for 7 days, stale-while-revalidate for 1 day
+        'Content-Type': 'image/webp',
+        // Cache at CDN/browser for 7 days, serve stale for 1 extra day
         'Cache-Control': 'public, max-age=604800, stale-while-revalidate=86400',
+        'Vary': 'Accept',
       },
     })
-  } catch {
+  } catch (err) {
+    console.error('[episode-image proxy]', err)
     return new NextResponse('Internal error', { status: 500 })
   }
 }

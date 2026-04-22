@@ -82,6 +82,7 @@ export default function MainLayout({ children }) {
               alt="Totally Rad Christmas! Podcast"
               sizes="(min-width: 1024px) 20rem, (min-width: 640px) 12rem, 8rem"
               priority
+              fetchPriority="high"
             />
             <div className="absolute inset-0 rounded-lg ring-1 ring-inset ring-black/10 sm:rounded-xl lg:rounded-2xl" />
           </Link>

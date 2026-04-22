@@ -11,10 +11,10 @@ import { getAllEpisodes } from '@/lib/episodes'
 
 const SITE_URL = 'https://totallyradchristmas.com'
 
-function proxyImage(url) {
+function proxyImage(url, w = 320) {
   if (!url) return null
   if (url.includes('storage.buzzsprout.com')) {
-    return `/api/episode-image?url=${encodeURIComponent(url)}`
+    return `/api/episode-image?url=${encodeURIComponent(url)}&w=${w}`
   }
   return url
 }
@@ -109,12 +109,12 @@ export default async function Episode({ params }) {
               {episode.image && (
                 <div className="shrink-0 hidden sm:block">
                   <Image
-                    src={proxyImage(episode.image)}
+                    src={proxyImage(episode.image, 320)}
                     alt={episode.title}
                     width={200}
                     height={200}
                     className="w-40 h-40 rounded-xl object-cover shadow-lg"
-                    sizes="160px"
+                    unoptimized
                     priority
                   />
                 </div>
