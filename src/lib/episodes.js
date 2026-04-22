@@ -34,7 +34,7 @@ export async function getAllEpisodes() {
         description: description || content,
         content: content || description,
         audio: enclosures?.map((e) => ({ src: e.url, type: e.type }))[0] ?? null,
-        image: itunes_image ?? null,
+        image: itunes_image?.href ?? null,
         link,
       }
     })
