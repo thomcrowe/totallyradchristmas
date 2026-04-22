@@ -8,6 +8,13 @@ import { getAllEpisodes } from '@/lib/episodes'
 
 const SITE_URL = 'https://totallyradchristmas.com'
 
+// Strip anchor tags from RSS description HTML so Lighthouse doesn't flag
+// generic link text ("here", "click here", etc.) from Buzzsprout show notes.
+// Keeps the visible text — removes the link wrapper only.
+function stripLinks(html) {
+  return html?.replace(/<a\b[^>]*>(.*?)<\/a>/gi, '$1') ?? ''
+}
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'PodcastSeries',
@@ -79,7 +86,7 @@ function EpisodeEntry({ episode }) {
             />
             <div
               className="mt-1 text-base leading-7 text-slate-700 [&>p+p]:mt-2"
-              dangerouslySetInnerHTML={{ __html: episode.description }}
+              dangerouslySetInnerHTML={{ __html: stripLinks(episode.description) }}
             />
             <div className="mt-4 flex items-center gap-4">
               <EpisodePlayButton
