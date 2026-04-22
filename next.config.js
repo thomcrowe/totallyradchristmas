@@ -64,8 +64,8 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              // Scripts: self + FontAwesome kit + Vercel analytics + Sanity Studio inline
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://kit.fontawesome.com https://va.vercel-scripts.com https://*.sanity.io",
+              // Scripts: self + FontAwesome kit + Vercel analytics + Google Analytics + Sanity Studio inline
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://kit.fontawesome.com https://va.vercel-scripts.com https://*.sanity.io https://www.googletagmanager.com https://www.google-analytics.com",
               // Styles: self + inline (Tailwind) + Bunny Fonts + FontAwesome
               "style-src 'self' 'unsafe-inline' https://fonts.bunny.net https://ka-f.fontawesome.com",
               // Fonts
@@ -74,8 +74,8 @@ const nextConfig = {
               "img-src 'self' data: blob: https://storage.buzzsprout.com https://cdn.sanity.io https://cdn.raster.app https://covers.openlibrary.org https://images.teepublic.com",
               // Audio: Buzzsprout
               "media-src 'self' https://*.buzzsprout.com https://www.buzzsprout.com",
-              // API calls: Sanity, Vercel Analytics
-              "connect-src 'self' https://*.sanity.io https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+              // API calls: Sanity, Vercel Analytics, Google Analytics
+              "connect-src 'self' https://*.sanity.io https://va.vercel-scripts.com https://vitals.vercel-insights.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com",
               // Frames: Sanity Studio embeds
               "frame-src 'self' https://*.sanity.io",
               // Block object/embed

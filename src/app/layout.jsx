@@ -1,5 +1,6 @@
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/react'
+import { GoogleAnalytics } from '@next/third-parties/google'
 import '@/styles/tailwind.css'
 
 export const metadata = {
@@ -113,6 +114,7 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
         />
       </body>
+      <GoogleAnalytics gaId="G-CZDY5REB5V" />
     </html>
   )
 }

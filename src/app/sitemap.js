@@ -2,29 +2,26 @@ import { getAllEpisodes } from '@/lib/episodes'
 
 const SITE_URL = 'https://totallyradchristmas.com'
 
+const STATIC_PAGES = [
+  { url: SITE_URL, priority: 1.0, changeFrequency: 'daily' },
+  { url: `${SITE_URL}/about`, priority: 0.8, changeFrequency: 'monthly' },
+  { url: `${SITE_URL}/raddies`, priority: 0.8, changeFrequency: 'yearly' },
+  { url: `${SITE_URL}/recipes`, priority: 0.7, changeFrequency: 'monthly' },
+  { url: `${SITE_URL}/resources`, priority: 0.7, changeFrequency: 'monthly' },
+  { url: `${SITE_URL}/merch`, priority: 0.6, changeFrequency: 'monthly' },
+]
+
 export default async function sitemap() {
   const episodes = await getAllEpisodes()
 
-  const episodeUrls = episodes.map((episode) => ({
+  const episodeEntries = episodes.map((episode) => ({
     url: `${SITE_URL}/${episode.id}`,
     lastModified: new Date(episode.published),
-    changeFrequency: 'monthly',
-    priority: 0.7,
+    changeFrequency: 'never',
+    priority: 0.6,
   }))
 
-  return [
-    {
-      url: SITE_URL,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1.0,
-    },
-    {
-      url: `${SITE_URL}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    ...episodeUrls,
-  ]
+  return [...STATIC_PAGES, ...episodeEntries]
 }
+
+export const revalidate = 3600
