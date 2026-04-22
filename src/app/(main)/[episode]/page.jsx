@@ -107,6 +107,7 @@ export default async function Episode({ params }) {
                     height={200}
                     className="w-40 h-40 rounded-xl object-cover shadow-lg"
                     priority
+                    unoptimized
                   />
                 </div>
               )}
