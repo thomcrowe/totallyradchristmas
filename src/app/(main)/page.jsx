@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
 import { Container } from '@/components/Container'
@@ -52,48 +53,61 @@ function EpisodeEntry({ episode }) {
       className="py-10 sm:py-12"
     >
       <Container>
-        <div className="flex flex-col items-start">
-          <h2
-            id={`episode-${episode.id}-title`}
-            className="mt-2 text-lg font-bold text-slate-900"
-          >
-            <Link href={`/${episode.id}`}>{episode.title}</Link>
-          </h2>
-          <FormattedDate
-            date={date}
-            className="order-first font-mono text-sm leading-7 text-slate-500"
-          />
-          <div
-            className="mt-1 text-base leading-7 text-slate-700 [&>p+p]:mt-2"
-            dangerouslySetInnerHTML={{ __html: episode.description }}
-          />
-          <div className="mt-4 flex items-center gap-4">
-            <EpisodePlayButton
-              episode={episode}
-              className="flex items-center gap-x-3 text-sm/6 font-bold text-red-600 hover:text-red-800 active:text-red-900"
-              playing={
-                <>
-                  <PauseIcon className="h-2.5 w-2.5 fill-current" />
-                  <span aria-hidden="true">Listen</span>
-                </>
-              }
-              paused={
-                <>
-                  <PlayIcon className="h-2.5 w-2.5 fill-current" />
-                  <span aria-hidden="true">Listen</span>
-                </>
-              }
-            />
-            <span aria-hidden="true" className="text-sm font-bold text-slate-400">
-              /
-            </span>
-            <Link
-              href={`/${episode.id}`}
-              className="flex items-center text-sm/6 font-bold text-red-600 hover:text-red-800 active:text-red-900"
-              aria-label={`Show notes for episode ${episode.title}`}
-            >
-              Show notes
+        <div className="flex items-start gap-6">
+          {episode.image && (
+            <Link href={`/${episode.id}`} className="shrink-0" tabIndex={-1} aria-hidden="true">
+              <Image
+                src={episode.image}
+                alt=""
+                width={112}
+                height={112}
+                className="w-20 h-20 sm:w-28 sm:h-28 rounded-lg object-cover shadow-md"
+              />
             </Link>
+          )}
+          <div className="flex flex-col items-start min-w-0">
+            <h2
+              id={`episode-${episode.id}-title`}
+              className="mt-2 text-lg font-bold text-slate-900"
+            >
+              <Link href={`/${episode.id}`}>{episode.title}</Link>
+            </h2>
+            <FormattedDate
+              date={date}
+              className="order-first font-mono text-sm leading-7 text-slate-500"
+            />
+            <div
+              className="mt-1 text-base leading-7 text-slate-700 [&>p+p]:mt-2"
+              dangerouslySetInnerHTML={{ __html: episode.description }}
+            />
+            <div className="mt-4 flex items-center gap-4">
+              <EpisodePlayButton
+                episode={episode}
+                className="flex items-center gap-x-3 text-sm/6 font-bold text-red-600 hover:text-red-800 active:text-red-900"
+                playing={
+                  <>
+                    <PauseIcon className="h-2.5 w-2.5 fill-current" />
+                    <span aria-hidden="true">Listen</span>
+                  </>
+                }
+                paused={
+                  <>
+                    <PlayIcon className="h-2.5 w-2.5 fill-current" />
+                    <span aria-hidden="true">Listen</span>
+                  </>
+                }
+              />
+              <span aria-hidden="true" className="text-sm font-bold text-slate-400">
+                /
+              </span>
+              <Link
+                href={`/${episode.id}`}
+                className="flex items-center text-sm/6 font-bold text-red-600 hover:text-red-800 active:text-red-900"
+                aria-label={`Show notes for episode ${episode.title}`}
+              >
+                Show notes
+              </Link>
+            </div>
           </div>
         </div>
       </Container>

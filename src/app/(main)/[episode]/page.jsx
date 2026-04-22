@@ -1,5 +1,6 @@
 import { cache } from 'react'
 import { notFound } from 'next/navigation'
+import Image from 'next/image'
 
 import { Container } from '@/components/Container'
 import { EpisodePlayButton } from '@/components/EpisodePlayButton'
@@ -43,7 +44,7 @@ export async function generateMetadata({ params }) {
       title: episode.title,
       description: plainDescription,
       url: episodeUrl,
-      images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: episode.title }],
+      images: [{ url: episode.image ?? '/og-image.jpg', alt: episode.title }],
       audio: episode.audio?.src,
       publishedTime: new Date(episode.published).toISOString(),
     },
@@ -51,7 +52,7 @@ export async function generateMetadata({ params }) {
       card: 'summary_large_image',
       title: episode.title,
       description: plainDescription,
-      images: ['/og-image.jpg'],
+      images: [episode.image ?? '/og-image.jpg'],
     },
   }
 }
@@ -96,24 +97,38 @@ export default async function Episode({ params }) {
       <article className="py-16 lg:py-36">
         <Container>
           <header className="flex flex-col">
-            <div className="flex items-center gap-6">
-              <EpisodePlayButton
-                episode={episode}
-                className="group relative flex h-18 w-18 shrink-0 items-center justify-center rounded-full bg-red-700 hover:bg-red-900 focus:outline-hidden"
-                playing={
-                  <PauseIcon className="h-9 w-9 fill-white group-active:fill-white/80" />
-                }
-                paused={
-                  <PlayIcon className="h-9 w-9 fill-white group-active:fill-white/80" />
-                }
-              />
-              <div className="flex flex-col">
-                <h1 className="mt-2 text-4xl font-bold text-slate-900">
-                  {episode.title}
-                </h1>
-                <FormattedDate
-                  date={date}
-                  className="order-first font-mono text-sm leading-7 text-slate-500"
+            <div className="flex items-start gap-6">
+              {episode.image && (
+                <div className="shrink-0 hidden sm:block">
+                  <Image
+                    src={episode.image}
+                    alt={episode.title}
+                    width={200}
+                    height={200}
+                    className="w-40 h-40 rounded-xl object-cover shadow-lg"
+                    priority
+                  />
+                </div>
+              )}
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col">
+                  <FormattedDate
+                    date={date}
+                    className="font-mono text-sm leading-7 text-slate-500"
+                  />
+                  <h1 className="mt-1 text-4xl font-bold text-slate-900">
+                    {episode.title}
+                  </h1>
+                </div>
+                <EpisodePlayButton
+                  episode={episode}
+                  className="group relative flex h-18 w-18 shrink-0 items-center justify-center rounded-full bg-red-700 hover:bg-red-900 focus:outline-hidden"
+                  playing={
+                    <PauseIcon className="h-9 w-9 fill-white group-active:fill-white/80" />
+                  }
+                  paused={
+                    <PlayIcon className="h-9 w-9 fill-white group-active:fill-white/80" />
+                  }
                 />
               </div>
             </div>

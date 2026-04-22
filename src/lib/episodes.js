@@ -17,7 +17,7 @@ function extractSlug(link) {
 export async function getAllEpisodes() {
   let feed = await parseFeed('https://rss.buzzsprout.com/840331.rss')
   return feed.items
-    .map(({ title, description, content, enclosures, published, link, guid, itunes_episode, itunes_season }) => {
+    .map(({ title, description, content, enclosures, published, link, guid, itunes_episode, itunes_season, itunes_image }) => {
       const slug = extractSlug(link) || extractSlug(guid) || String(published)
       const epNum = itunes_episode ?? null
       const season = itunes_season ?? null
@@ -34,6 +34,7 @@ export async function getAllEpisodes() {
         description: description || content,
         content: content || description,
         audio: enclosures?.map((e) => ({ src: e.url, type: e.type }))[0] ?? null,
+        image: itunes_image ?? null,
         link,
       }
     })
