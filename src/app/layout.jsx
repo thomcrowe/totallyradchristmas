@@ -1,6 +1,8 @@
+import { headers } from 'next/headers'
 import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/react'
 import { GoogleAnalytics } from '@next/third-parties/google'
+import { FontLoader } from '@/components/FontLoader'
 import '@/styles/tailwind.css'
 
 export const metadata = {
@@ -81,38 +83,41 @@ export const metadata = {
   },
 }
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const nonce = (await headers()).get('x-nonce') ?? ''
+
   return (
     <html lang="en" className="h-full bg-white antialiased">
       <head>
+        {/* Preconnect so the font CSS request starts immediately */}
         <link
           rel="preconnect"
           href="https://fonts.bunny.net"
           crossOrigin="anonymous"
         />
-        {/* Load font non-blocking: print trick swaps to all after load */}
-        <link
-          rel="stylesheet"
-          href="https://fonts.bunny.net/css?family=satoshi:300,400,500,700&display=swap"
-          media="print"
-          // @ts-expect-error onLoad is valid here for the font-loading trick
-          onLoad="this.media='all'"
-        />
+        {/*
+          FontLoader (client component) injects the Satoshi stylesheet via
+          useEffect — non-blocking, no console errors. The <noscript> below
+          is a fallback for JS-disabled crawlers like Googlebot.
+        */}
+      </head>
+      <body className="flex min-h-full">
+        {/* Fallback font for no-JS environments (Googlebot, etc.) */}
         <noscript>
           <link
             rel="stylesheet"
             href="https://fonts.bunny.net/css?family=satoshi:300,400,500,700&display=swap"
           />
         </noscript>
-      </head>
-      <body className="flex min-h-full">
         <div className="w-full">{children}</div>
+        <FontLoader />
         <Analytics />
-        <GoogleAnalytics gaId="G-CZDY5REB5V" />
+        <GoogleAnalytics gaId="G-CZDY5REB5V" nonce={nonce} />
         <Script
           src="https://kit.fontawesome.com/8e56931674.js"
           crossOrigin="anonymous"
           strategy="afterInteractive"
+          nonce={nonce}
         />
       </body>
     </html>

@@ -27,6 +27,8 @@ function audioReducer(state, action) {
       return { ...state, currentTime: action.payload }
     case ActionKind.SET_DURATION:
       return { ...state, duration: action.payload }
+    default:
+      return state
   }
 }
 
