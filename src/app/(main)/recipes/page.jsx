@@ -48,13 +48,19 @@ function buildJsonLd(recipes) {
 export const revalidate = 60
 
 async function getRecipes() {
+  // staticRecipes is always the baseline — the cookbook recipes live here.
+  // If Sanity is configured, we fetch and merge any CMS-only recipes on top,
+  // but we never replace the static set with a potentially smaller Sanity result.
   if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID) {
     return staticRecipes
   }
   try {
     const { getAllRecipes } = await import('@/sanity/lib/queries')
     const data = await getAllRecipes()
-    return data?.length ? data : staticRecipes
+    if (!data?.length) return staticRecipes
+    const staticIds = new Set(staticRecipes.map((r) => r.id))
+    const sanityOnly = data.filter((r) => !staticIds.has(r.id))
+    return [...staticRecipes, ...sanityOnly]
   } catch {
     return staticRecipes
   }
