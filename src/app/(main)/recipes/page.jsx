@@ -45,7 +45,7 @@ function buildJsonLd(recipes) {
   }
 }
 
-export const revalidate = 60
+export const revalidate = 3600
 
 async function getRecipes() {
   // staticRecipes is always the baseline — the cookbook recipes live here.

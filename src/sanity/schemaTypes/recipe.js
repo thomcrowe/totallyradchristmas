@@ -24,9 +24,11 @@ export const recipeSchema = {
         list: [
           { title: 'Main Dishes', value: 'Main Dishes' },
           { title: 'Sides & Salads', value: 'Sides & Salads' },
+          { title: 'Soups & Bisques', value: 'Soups & Bisques' },
           { title: 'Desserts', value: 'Desserts' },
           { title: 'Drinks & Cocktails', value: 'Drinks & Cocktails' },
           { title: 'Appetizers', value: 'Appetizers' },
+          { title: 'Breads & Sauces', value: 'Breads & Sauces' },
           { title: 'Questionable Classics', value: 'Questionable Classics' },
         ],
         layout: 'dropdown',
